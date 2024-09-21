@@ -24,3 +24,5 @@ Just run
 `python main.py
 `
 in a command line.
+
+For your own data, please make sure that the data is stored in h5 format, containing X as a cell * gene raw count matrix and Y as the real cell type labels.
