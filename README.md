@@ -28,5 +28,6 @@ in a command line.
 For your own data, please make sure that the data is stored in h5 format, containing X as a cell * gene raw count matrix and Y as the real cell type labels.
 
 Please note that the installation of torch_geometric may require some dependency packages, before installing torch_geometric, please run 
+
 `pip install torch-scatter torch-sparse torch-spline-conv -f https://data.pyg.org/whl/torch-2.3.0+cu121.html
 `
