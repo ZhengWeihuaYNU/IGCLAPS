@@ -19,4 +19,8 @@ dgl---2.1.0
 
 h5py---3.11.0
 
-
+# Usage:
+Just run 
+`python main.py
+`
+in a command line.
