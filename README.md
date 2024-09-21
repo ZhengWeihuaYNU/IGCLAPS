@@ -1,5 +1,5 @@
 # scCLAPS
-A end-to-end clustering methods for scRNA-seq data based on graph contrastive learning.
+Source codes of scCLAPS: a graph contrasitve learning method with adaptive positive sampling for clustering scRNA-seq data.
 # Requirements:
 python---3.12
 
@@ -26,3 +26,7 @@ Just run
 in a command line.
 
 For your own data, please make sure that the data is stored in h5 format, containing X as a cell * gene raw count matrix and Y as the real cell type labels.
+
+Please note that the installation of torch_geometric may require some dependency packages, before installing torch_geometric, please run 
+`pip install torch-scatter torch-sparse torch-spline-conv -f https://data.pyg.org/whl/torch-2.3.0+cu121.html
+`
