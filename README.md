@@ -1,5 +1,5 @@
-# scCLAPS
-Source codes of scCLAPS: a graph contrasitve learning method with adaptive positive sampling for clustering scRNA-seq data.
+# IGCLAPS
+Source codes of IGCLAPS: an interpretable graph contrastive learning method with adaptive positive sampling for scRNA-seq data analysis.
 # Requirements:
 python---3.12
 
