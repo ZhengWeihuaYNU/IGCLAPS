@@ -34,3 +34,17 @@ Just run
 in a command line or run test.ipynb.
 
 For your own data, please make sure that the data is stored in .txt format containing raw count matrix with cells as rows and genes as columns. 
+
+# Data availability:
+PBMC 4k: [source](https://support.10xgenomics.com/single-cell-gene-expression/datasets/2.1.0/pbmc4k?)
+Darmanis: [source](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE67835)
+LaManno: [source](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE76381)
+Baron human: [source](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE84133)
+Baron mouse: [source](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE84133)
+Muraro: [source](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE85241)
+Bladder: [source](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE108097)
+Adam: [source](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE94333)
+Zanini: [source](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE147668)
+Colquitt: [source](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE150486)
+Young: [source](https://ega-archive.org/datasets/)
+Chen: [source](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE87544)
