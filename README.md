@@ -9,6 +9,8 @@ torch---2.3.0
 
 numpy---1.26.4
 
+pandas--2.2.3
+
 scikit-learn---1.5.2
 
 torch_geometric---2.6.0
@@ -29,7 +31,6 @@ Other packages can be installed by 'pip install xxx', while dgl should be instal
 Just run 
 `python main.py
 `
-in a command line.
+in a command line or run test.ipynb.
 
-For your own data, please make sure that the data is stored in h5 format, containing X as a cell * gene raw count matrix and Y as the real cell type labels.
-
+For your own data, please make sure that the data is stored in .txt format containing raw count matrix with cells as rows and genes as columns. 
