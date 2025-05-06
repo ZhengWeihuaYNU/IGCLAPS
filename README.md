@@ -26,7 +26,7 @@ h5py---3.11.0
 igraph---0.11.8
 # Note:
 Other packages can be installed by 'pip install xxx', while dgl should be installed by running 
-`pip install dgl -f https://data.dgl.ai/wheels/torch-2.3/cu121/repo.html`. Besides, after installing torch_geometric, please run `pip install pyg_lib torch_scatter torch_sparse torch_cluster torch_spline_conv -f https://data.pyg.org/whl/torch-2.3.0+cu121.html` to install dependent packages.  
+`pip install dgl -f https://data.dgl.ai/wheels/torch-2.3/cu121/repo.html`. Besides, after installing torch_geometric, please run `pip install pyg_lib torch_scatter torch_sparse torch_cluster torch_spline_conv -f https://data.pyg.org/whl/torch-2.3.0+cu121.html` to install dependencies.  
 # Usage:
 Just run 
 `python main.py
