@@ -7,6 +7,7 @@ import time
 import torch
 import h5py
 import numpy as np
+import pandas as pd
 from sklearn.cluster import KMeans
 from sklearn.metrics import adjusted_rand_score, normalized_mutual_info_score
 from sklearn.preprocessing import LabelEncoder
@@ -20,20 +21,19 @@ from layers import GraphTransformerNet,  DataAug
 from loss import AGCLoss, contrastive_loss
 from utils import knngraph, sim, cluster_acc
 
-def evaluate(data_name= 'pbmc4k', real_label= True, net_params= {'num_layers': 1, 'in_dim': expr.shape[1], 'hidden_dim': 32, 
+def evaluate(data_name= 'pbmc4k',  net_params= {'num_layers': 1, 'in_dim': expr.shape[1], 'hidden_dim': 32, 
                                                                  'out_dim': 32, 'final_embed': 16, 'num_heads': 4, 'dropout': 0.5, 
                                                                  'attn_drop': 0.5, 'add_drop': 0.0, 'lap_pos_enc': True, 
                                                                  'pos_enc_dim':eig_num, 'cluster': 8, 'num_neighbors': 400,
                                                                  'batch_size': 512, 'tau': 0.5, 'cls_thres': 0.5}):
     #if gpu is availbale then use gpu
     device= 'cuda' if torch.cuda.is_available() else 'cpu'
-    expr= pd.read_csv(f'{data_name}.txt', sep= '\t', index_col= 0) 
-    if real_label== True:
-        real_label= pd.read_csv('real_label.txt', sep= '\t', index_col= 0)
-        adata.obs['Ground Truth'] = real_label
-        real_label = torch.tensor(LabelEncoder().fit_transform(adata.obs['Ground Truth']))
+    data_h5 = h5py.File(f'{data_name}.h5') #data file, containing X as the cell*gene count matrix and Y as the real label
+    expr = np.array(data_h5.get('X'))
+    #real_label = np.array(data_h5.get('Y')).reshape(-1)
     adata = preprocess(expr) #data preprocessing includes quality control, normalization, log-transformation and HVGs selection
     expr = torch.tensor(adata.X[:, adata.var['highly_variable']].astype(np.float32))
+    #adata.obs['Ground Truth'] = real_label
     pca_embed = torch.tensor(adata.obsm['X_pca'].copy())
     
     num_neighbors= net_params['num_neighbors']
@@ -130,15 +130,10 @@ def evaluate(data_name= 'pbmc4k', real_label= True, net_params= {'num_layers': 1
     final_cluster = ((cluster1 + cluster2) / 2).argmax(1).cpu()
     end_time= time.time()
     print(f'time cost: {end_time- start_time}')
-    if real_label==True:
-        ari = adjusted_rand_score(real_label, final_cluster)
-        nmi = normalized_mutual_info_score(real_label, final_cluster)
-        ca = cluster_acc(real_label, final_cluster)
-        print(f'evaluated ari: {ari}')
-        print(f'evaluated nmi: {nmi}')
-        print(f'evaluated ca: {ca}')
+    pd.DataFrame(final_cluster).to_csv(f'pred_{data_name}.csv'})
     print('Done')
+    
 
 if __name__ == '__main__':
-    evaluate()
+    test_your_own_data()
 
