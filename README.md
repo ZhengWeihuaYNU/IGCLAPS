@@ -33,7 +33,7 @@ Just run
 `
 in a command line or run test.ipynb.
 
-For your own data, please make sure that the data is stored in .txt format containing raw count matrix with cells as rows and genes as columns. 
+For your own data, please make sure that the data is stored in .h5 format containing raw count matrix 'X' with cells as rows and genes as columns. 
 
 # Data availability:
 PBMC 4k: [source](https://support.10xgenomics.com/single-cell-gene-expression/datasets/2.1.0/pbmc4k?)
