@@ -21,10 +21,10 @@ from layers import GraphTransformerNet,  DataAug
 from loss import AGCLoss, contrastive_loss
 from utils import knngraph, sim, cluster_acc
 
-def evaluate(data_name= 'pbmc4k',  net_params= {'num_layers': 1, 'in_dim': expr.shape[1], 'hidden_dim': 32, 
+def evaluate(data_name= 'pbmc4k',  net_params= {'num_layers': 1, 'hidden_dim': 32, 
                                                                  'out_dim': 32, 'final_embed': 16, 'num_heads': 4, 'dropout': 0.5, 
                                                                  'attn_drop': 0.5, 'add_drop': 0.0, 'lap_pos_enc': True, 
-                                                                 'pos_enc_dim':eig_num, 'cluster': 8, 'num_neighbors': 400,
+                                                                 'pos_enc_dim':20, 'cluster': 8, 'num_neighbors': 400, 'eig_num':20,
                                                                  'batch_size': 512, 'tau': 0.5, 'cls_thres': 0.5}):
     #if gpu is availbale then use gpu
     device= 'cuda' if torch.cuda.is_available() else 'cpu'
@@ -33,11 +33,12 @@ def evaluate(data_name= 'pbmc4k',  net_params= {'num_layers': 1, 'in_dim': expr.
     #real_label = np.array(data_h5.get('Y')).reshape(-1)
     adata = preprocess(expr) #data preprocessing includes quality control, normalization, log-transformation and HVGs selection
     expr = torch.tensor(adata.X[:, adata.var['highly_variable']].astype(np.float32))
+    net_params['in_dim']= expr.shape[1]
     #adata.obs['Ground Truth'] = real_label
     pca_embed = torch.tensor(adata.obsm['X_pca'].copy())
     
     num_neighbors= net_params['num_neighbors']
-    eig_num= 20
+    eig_num= net_params['eig_num']
     gradient_clipping = 10
     num_epochs = 500
     batch_size= net_params['batch_size']
@@ -70,6 +71,11 @@ def evaluate(data_name= 'pbmc4k',  net_params= {'num_layers': 1, 'in_dim': expr.
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay= 1e-4)
     best_t = -1
     counter = 0
+    test_loader = NeighborLoader(g_data, num_neighbors= [5]*net_params['num_layers'], batch_size=batch_size, shuffle=False)
+    cls_loss_list= []
+    ins_loss_list= []
+    loss_list= []
+
     start_time= time.time()
     for epoch in range(num_epochs):
         model.train()
@@ -87,6 +93,10 @@ def evaluate(data_name= 'pbmc4k',  net_params= {'num_layers': 1, 'in_dim': expr.
                                              sub_adj_eye, sim_cls, cls_thres)
             loss_cluster = agc(cluster1[:len(batch.input_id), :], cluster2[:len(batch.input_id), :], sub_adj_eye)
             loss = lam * loss_instance + (1 - lam) * loss_cluster
+            cls_loss_list.append(loss_instance.detach().cpu().numpy())
+            ins_loss_list.append(loss_cluster.detach().cpu().numpy())
+            loss_list.append(loss.detach().cpu().numpy())
+
             loss.backward()
             torch.nn.utils.clip_grad_norm_(model.parameters(), gradient_clipping)
             optimizer.step()
@@ -122,18 +132,18 @@ def evaluate(data_name= 'pbmc4k',  net_params= {'num_layers': 1, 'in_dim': expr.
             #print(f'Ari: {ari}')
             print(f'current best epoch: {best_t + 1}')
     print('Loading {}th epoch'.format(best_t))
+    model= torch.load(f'best_model_{data_name}.pth')
     model.eval()
-    model.load_state_dict(torch.load('best_model.pkl'))
     output1, output2, contrast1, contrast2, cluster1, cluster2 = model(expr, expr, g_edges, lp_matrix)
     final_output = (output1 + output2) / 2
     final_output = final_output.cpu().detach().numpy()
     final_cluster = ((cluster1 + cluster2) / 2).argmax(1).cpu()
     end_time= time.time()
     print(f'time cost: {end_time- start_time}')
-    pd.DataFrame(final_cluster).to_csv(f'pred_{data_name}.csv'})
+    pd.DataFrame(final_cluster).to_csv(f'pred_{data_name}.csv')
     print('Done')
     
 
 if __name__ == '__main__':
-    test_your_own_data()
+    evaluate()
 
