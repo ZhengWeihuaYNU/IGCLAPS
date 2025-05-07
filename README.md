@@ -31,7 +31,7 @@ Other packages can be installed by 'pip install xxx', while dgl should be instal
 Just run 
 `python main.py
 `
-in a command line or run test.ipynb.
+in a command line or run test_script.ipynb in jupyter lab.
 
 For your own data, please make sure that the data is stored in .h5 format containing raw count matrix 'X' with cells as rows and genes as columns. 
 
